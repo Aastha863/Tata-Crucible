@@ -81,7 +81,7 @@ public class Scanner extends AppCompatActivity {
                             startActivity(intent);
                             break;
                         case R.id.about_us:
-                            intent = new Intent(Scanner.this, PreviousScan.class);
+                            intent = new Intent(Scanner.this, AboutUs.class);
                             startActivity(intent);
                             break;
                         case R.id.exit:
@@ -139,7 +139,6 @@ public class Scanner extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     helper.addOne(cm);
                     intent.setData(Uri.parse(r));
-
                     startActivity(intent);
                     Intent i = new Intent(Scanner.this,PreviousScan.class);
                     i.putExtra("Url",r);
