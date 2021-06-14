@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         gbtn =findViewById(R.id.gen);
         sbtn=findViewById(R.id.scan);
         getimage= findViewById(R.id.cr);
+        Intent intent=getIntent();
 
         gbtn.setOnClickListener(new View.OnClickListener() {
             @Override

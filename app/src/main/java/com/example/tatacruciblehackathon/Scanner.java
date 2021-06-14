@@ -6,17 +6,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.android.material.navigation.NavigationView;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
@@ -39,16 +44,70 @@ public class Scanner extends AppCompatActivity {
     CodeScannerView sv;
     TextView resultdata;
     Button visit;
+    public DrawerLayout mDrawerlayout;
+    NavigationView navigationView;
+    ActionBarDrawerToggle actionBarDrawerToggle;
     String r;
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(actionBarDrawerToggle.onOptionsItemSelected(item))
+        {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public final NavigationView.OnNavigationItemSelectedListener navListener =
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    int id = item.getItemId();
+                    Intent intent;
+                    switch (id) {
+
+                        case R.id.generate_scan:
+                            //Add prescriptions activity
+                            intent = new Intent(Scanner.this, MainActivity.class);
+                            startActivity(intent);
+                            break;
+                        case R.id.products:
+                            //Add uploads activity
+                            intent = new Intent(Scanner.this, products.class);
+                            startActivity(intent);
+                            break;
+                        case R.id.previous_scans:
+                            //Add uploads activity
+                            intent = new Intent(Scanner.this, PreviousScan.class);
+                            startActivity(intent);
+                            break;
+                        case R.id.about_us:
+                            intent = new Intent(Scanner.this, PreviousScan.class);
+                            startActivity(intent);
+                            break;
+                        case R.id.exit:
+                            finish();
+                            break;
+                    }
+                    return true;
+
+                }};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scanner);
-        sv=findViewById(R.id.scannerView);
+        setContentView(R.layout.nav_drawer);
+         sv=findViewById(R.id.scannerView);
+         mDrawerlayout=findViewById(R.id.drawer_layout);
+         actionBarDrawerToggle=new ActionBarDrawerToggle(this,mDrawerlayout,R.string.nav_open,R.string.nav_close);
+         mDrawerlayout.addDrawerListener(actionBarDrawerToggle);
+         actionBarDrawerToggle.syncState();
+         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         cs= new CodeScanner(this,sv);
         resultdata = findViewById(R.id.url);
         visit=findViewById(R.id.visit);
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(navListener);
         // for multiple call backs
+
         cs.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull Result result) {
@@ -73,12 +132,18 @@ public class Scanner extends AppCompatActivity {
         visit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int a=5;
+                CustomerModel cm = new CustomerModel(5,r);
+                Connection_Helper helper = new Connection_Helper(Scanner.this);
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-
+                    helper.addOne(cm);
                     intent.setData(Uri.parse(r));
 
                     startActivity(intent);
+                    Intent i = new Intent(Scanner.this,PreviousScan.class);
+                    i.putExtra("Url",r);
+
                 }
                 catch (Exception e)
                 {
@@ -114,54 +179,29 @@ public class Scanner extends AppCompatActivity {
             try {
 
                 final Uri imageUri = data.getData();
-
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
                 try {
-
                     Bitmap bMap = selectedImage;
-
                     String contents = null;
-
-
-
                     int[] intArray = new int[bMap.getWidth()*bMap.getHeight()];
-
                     bMap.getPixels(intArray, 0, bMap.getWidth(), 0, 0, bMap.getWidth(), bMap.getHeight());
-
-
-
                     LuminanceSource source = new RGBLuminanceSource(bMap.getWidth(), bMap.getHeight(), intArray);
-
                     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-
-
-
                     MultiFormatReader reader = new MultiFormatReader();
-
                     Result result = reader.decode(bitmap);
-
                     contents = result.getText();
-
                     resultdata.setText(contents);
                     r=contents;
-
-
                 }catch (Exception e){
-
                     e.printStackTrace();
                     Toast.makeText(Scanner.this,"Given image is not a QR code thus can't be scanned be scanned",Toast.LENGTH_SHORT).show();
-
                 }
-
                 //  image_view.setImageBitmap(selectedImage);
 
             } catch (FileNotFoundException e) {
-
                 e.printStackTrace();
-
                 Toast.makeText(Scanner.this, "Something went wrong", Toast.LENGTH_LONG).show();
 
             }

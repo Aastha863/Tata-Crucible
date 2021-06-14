@@ -24,12 +24,11 @@ public class SplashActivity extends AppCompatActivity {
         //        }, 2000);
         im=findViewById(R.id.logo);
 
-
     }
     //view is required
     public void gotoMain(View view)
     {
-        Intent i = new Intent(this,MainActivity.class);
+        Intent i = new Intent(this,Scanner.class);
         startActivity(i);
     }
 }

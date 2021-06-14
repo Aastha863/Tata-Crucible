@@ -13,6 +13,8 @@
         android:theme="@style/Theme.TataCrucibleHackathon">
         <activity android:name=".Scanner"></activity>
         <activity android:name=".MainActivity"></activity>
+        <activity android:name=".products"></activity>
+        <activity android:name=".PreviousScan"></activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
