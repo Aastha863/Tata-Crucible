@@ -1,2 +1,2 @@
 # Tata-Crucible
-Ml model in QR Scanner added in Qrpix.ipynb
+Ml model of QR Scanner added in Qrpix.ipynb
