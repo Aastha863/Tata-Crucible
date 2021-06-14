@@ -71,12 +71,10 @@ public class Scanner extends AppCompatActivity {
                             startActivity(intent);
                             break;
                         case R.id.products:
-                            //Add uploads activity
                             intent = new Intent(Scanner.this, products.class);
                             startActivity(intent);
                             break;
                         case R.id.previous_scans:
-                            //Add uploads activity
                             intent = new Intent(Scanner.this, PreviousScan.class);
                             startActivity(intent);
                             break;
